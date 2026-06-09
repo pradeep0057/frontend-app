@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: build-push-deploy
+name: build-deploy
 
 steps:
   - name: build-image
@@ -10,12 +10,20 @@ steps:
         from_secret: AWS_ACCOUNT_ID
       AWS_REGION:
         from_secret: AWS_REGION
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
+      # Log into AWS ECR
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      # Build, tag, and push the image
       - docker build -t drone-test:latest .
       - docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
 
   - name: deploy
     image: amazon/aws-cli:latest

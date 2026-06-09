@@ -3,346 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Frontend Dashboard</title>
+    <title>Netflix India - Watch TV Shows Online, Watch Movies Online</title>
     <style>
-        /* Modern Reset & CSS Variables */
+        /* Global Variables & Structural Reset */
         :root {
-            --bg-primary: #0f172a;
-            --bg-surface: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --danger: #ef4444;
-            --success: #10b981;
-            --radius: 12px;
-            --transition: all 0.3s ease;
+            --primary-red: #E50914;
+            --primary-hover: #C11119;
+            --bg-black: #000000;
+            --card-gray: #232323;
+            --text-white: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --border-gray: rgba(128, 128, 128, 0.5);
+            --site-width: 1200px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Netflix Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Sidebar Navigation Layout */
-        aside {
-            width: 260px;
-            background-color: var(--bg-surface);
-            border-right: 1px solid #334155;
-            display: flex;
-            flex-direction: column;
-            padding: 2rem 1.5rem;
+        /* Hero Wrapper Component with Dark Gradient Layer overlay */
+        .hero-section {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.9) 100%), 
+                        url('https://assets.nflxext.com/ffe/siteui/vlv3/7ca5b7c7-20aa-42a8-a278-f801b0d65fa1/fb548c15-cd85-41c6-bb4d-ee9c192d73a5/IN-en-20240326-popsignuptwoweeks-perspective_web_medium.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 700px;
+            width: 100%;
+            border-bottom: 8px solid #232323;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 2.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius);
-            display: block;
-            transition: var(--transition);
-        }
-
-        .nav-links a.active, .nav-links a:hover {
-            background-color: var(--accent);
-            color: var(--text-main);
-        }
-
-        /* Main Workspace Content */
-        main {
-            flex: 1; /* FIXED: Corrected from 'flex-1;' layout error */
-            width: calc(100% - 260px);
-            padding: 2.5rem;
-            overflow-y: auto;
-        }
-
-        header {
+        /* Top Header Utility Menu */
+        nav {
+            max-width: var(--site-width);
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2.5rem;
         }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 600;
+        .brand-logo svg {
+            fill: var(--primary-red);
+            width: 148px;
+            height: 40px;
         }
 
-        /* Form Controls */
-        .task-input-group {
-            background-color: var(--bg-surface);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            border: 1px solid #334155;
+        .nav-actions {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 0.75rem;
+            align-items: center;
         }
 
-        input[type="text"] {
+        .lang-btn {
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--text-white);
+            border: 1px solid var(--border-gray);
+            padding: 0.35rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background-color: var(--primary-red);
+            color: var(--text-white);
+            text-decoration: none;
+            padding: 0.35rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .login-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Main Call-to-Action Messaging Area */
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 9rem 1.5rem 0 1.5rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-content h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .email-form-heading {
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Inline CTA Forms */
+        .cta-form-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .input-wrapper {
             flex: 1;
-            background-color: var(--bg-primary);
-            border: 1px solid #334155;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            color: var(--text-main);
+            min-width: 300px;
+        }
+
+        .cta-input {
+            width: 100%;
+            padding: 1.2rem 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            color: var(--text-white);
             font-size: 1rem;
             outline: none;
-            transition: var(--transition);
+            transition: border-color 0.2s ease;
         }
 
-        input[type="text"]:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        .cta-input:focus {
+            border-color: var(--text-white);
+            box-shadow: 0 0 0 1px var(--text-white);
         }
 
-        button {
-            background-color: var(--accent);
-            color: white;
+        .cta-btn {
+            background-color: var(--primary-red);
+            color: var(--text-white);
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
+            padding: 0 2rem;
+            font-size: 1.5rem;
             font-weight: 600;
-            transition: var(--transition);
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s ease;
+            min-height: 56px;
         }
 
-        button:hover {
-            background-color: var(--accent-hover);
+        .cta-btn:hover {
+            background-color: var(--primary-hover);
         }
 
-        /* Grid Metrics Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
+        /* Modular Grid Sections */
+        .feature-grid-row {
+            border-bottom: 8px solid #232323;
+            padding: 4.5rem 2rem;
+        }
+
+        .feature-container {
+            max-width: var(--site-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+        }
+
+        .feature-container.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .feature-text-block {
+            flex: 1;
+        }
+
+        .feature-text-block h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .feature-text-block p {
+            font-size: 1.5rem;
+            color: var(--text-white);
+            line-height: 1.4;
+        }
+
+        .feature-media-block {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .feature-media-block img {
+            max-width: 100%;
+            height: auto;
+            z-index: 2;
+        }
+
+        /* FAQ Interactive Accordions */
+        .faq-section {
+            border-bottom: 8px solid #232323;
+            padding: 4.5rem 1.5rem;
+        }
+
+        .faq-container {
+            max-width: var(--site-width);
+            margin: 0 auto;
+        }
+
+        .faq-container h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
             margin-bottom: 2.5rem;
         }
 
-        .stat-card {
-            background-color: var(--bg-surface);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            border: 1px solid #334155;
-        }
-
-        .stat-card h3 {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card p {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        /* Task List Area */
-        .task-list-container {
-            background-color: var(--bg-surface);
-            border-radius: var(--radius);
-            border: 1px solid #334155;
-            padding: 1.5rem;
-        }
-
-        .task-list-container h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .task-list {
-            list-style: none;
+        .accordion-wrapper {
+            max-width: 800px;
+            margin: 0 auto 3.5rem auto;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .task-item {
-            background-color: var(--bg-primary);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .task-item.completed {
-            border-left-color: var(--success);
-            opacity: 0.6;
-        }
-
-        .task-item.completed .task-text {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        .task-actions {
-            display: flex;
             gap: 0.5rem;
         }
 
-        .btn-action {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.85rem;
-            border-radius: 6px;
+        /* Native Accordion Details Implementation without heavy Javascript layout scripts */
+        details.faq-item {
+            background-color: var(--card-gray);
+            width: 100%;
+            transition: background 0.2s ease;
         }
 
-        .btn-complete { background-color: var(--success); }
-        .btn-delete { background-color: var(--danger); }
+        details.faq-item:hover {
+            background-color: #414141;
+        }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        summary.faq-question {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 400;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 1px solid var(--bg-black);
+        }
+
+        summary.faq-question::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-icon {
+            font-size: 2.2rem;
+            font-weight: 300;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        details[open] .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            line-height: 1.4;
+            color: var(--text-white);
+            border-top: 2px solid var(--bg-black);
+            animation: slideDown 0.25s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Responsive Breakpoints */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            aside { width: 100%; }
-            main { width: 100%; padding: 1.5rem; }
+        /* Standard Corporate Clean Footer */
+        footer {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4.5rem 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .footer-contact {
+            margin-bottom: 2rem;
+        }
+
+        .footer-contact a {
+            color: var(--text-muted);
+        }
+
+        .footer-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links-grid a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-links-grid a:hover {
+            text-decoration: underline;
+        }
+
+        /* Media Viewport Responsive Breakpoints */
+        @media (max-width: 968px) {
+            .hero-content h1, .feature-text-block h2, .faq-container h2 {
+                font-size: 2.2rem;
+            }
+            .hero-content h2, .feature-text-block p, summary.faq-question, .faq-answer {
+                font-size: 1.2rem;
+            }
+            .feature-container, .feature-container.reverse {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+            .brand-logo svg {
+                width: 100px;
+                height: 30px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .cta-form-container {
+                flex-direction: column;
+            }
+            .input-wrapper, .cta-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <aside>
-        <div class="logo">🚀 Apex<span>Core</span></div>
-        <ul class="nav-links">
-            <li><a href="#" class="active">Dashboard</a></li>
-            <li><a href="#">Analytics</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="#">Settings</a></li>
-        </ul>
-    </aside>
-
-    <main>
-        <header>
-            <div>
-                <h1>Workspace Overview</h1>
-                <p style="color: var(--text-muted);">Manage your production items dynamically</p>
+    <header class="hero-section">
+        <nav>
+            <div class="brand-logo">
+                <svg viewBox="0 0 111 30" aria-hidden="true">
+                    <path d="M10.5 9.3v13.4c0 .6-.2.8-.7.8H8.1c-.5 0-.7-.2-.7-.8V9.3h-.1l-3.3 12.3c-.1.5-.4.7-.8.7H1.5c-.5 0-.7-.3-.6-.8L4.6 3.7c.1-.5.4-.7.9-.7h3c.5 0 .7.2.8.7l3.6 13.5h.1l3.3-12.4c.1-.5.4-.7.9-.7h2.9c.5 0 .7.3.6.8l-3.7 17.8c-.1.5-.4.7-.9.7h-1.8c-.5 0-.7-.2-.7-.8V9.3h-.1zM31.3 12.8c0-2.4-1.2-4.1-3.6-4.1-2.3 0-3.7 1.7-3.7 4.1v5.3c0 2.4 1.3 4.1 3.7 4.1 2.4 0 3.6-1.7 3.6-4.1v-5.3zm3.7 5.4c0 4.2-2.7 6.6-7.3 6.6-4.7 0-7.4-2.4-7.4-6.6v-5.5c0-4.2 2.7-6.6 7.4-6.6 4.6 0 7.3 2.4 7.3 6.6v5.5zM41.7 3c.6 0 .8.2.8.8v5.1h3.3c.5 0 .7.2.7.7v1.8c0 .5-.2.7-.7.7h-3.3v7.3c0 1.2.4 1.7 1.4 1.7h1.9c.5 0 .7.2.7.7v1.9c0 .5-.2.7-.7.7h-2.5c-3.1 0-4.6-1.4-4.6-4.3V12h-1.7c-.5 0-.7-.2-.7-.7V9.5c0-.5.2-.7.7-.7h1.7V3.8c0-.6.2-.8.8-.8h2.3zM58.3 9c.5 0 .7.2.7.7v13.1c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V12c0-1.5-.7-2.3-1.9-2.3-1.4 0-2.3 1.1-2.3 2.7v10.4c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V3.8c0-.6.2-.8.8-.8h2.3c.5 0 .7.2.7.8v5h.1c.8-1.5 2.2-2.6 4.1-2.6.4 0 .7.1 1 .2.3.1.5.2.7.4.3.3.5.7.5 1.1v.2zM63.8 3.8c0-.6.2-.8.8-.8h2.3c.5 0 .7.2.7.8v19c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V3.8zM73.5 4.8c0-.9.7-1.6 1.7-1.6s1.6.7 1.6 1.6c0 .9-.7 1.6-1.6 1.6s-1.7-.7-1.7-.1.6zm.2 4.5c.5 0 .7.2.7.7v13.1c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V10c0-.5.2-.7.7-.7h2.3zM89.1 9.3v13.4c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V12c0-1.5-.7-2.3-1.9-2.3-1.3 0-2.2 1.1-2.2 2.7v10.4c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V10c0-.5.2-.7.7-.7h2.3c.5 0 .7.2.7.7v1.4h.1c.8-1.4 2.2-2.4 4-2.4 3 0 4.7 1.9 4.7 4.9v.4zM100.8 12.8c0-2.4-1.2-4.1-3.6-4.1-2.3 0-3.7 1.7-3.7 4.1v5.3c0 2.4 1.3 4.1 3.7 4.1 2.4 0 3.6-1.7 3.6-4.1v-5.3zm3.7 5.4c0 4.2-2.7 6.6-7.3 6.6-4.7 0-7.4-2.4-7.4-6.6v-5.5c0-4.2 2.7-6.6 7.4-6.6 4.6 0 7.3 2.4 7.3 6.6v5.5z"></path>
+                </svg>
             </div>
-        </header>
-
-        <section class="stats-grid">
-            <div class="stat-card">
-                <h3>Total Tasks</h3>
-                <p id="total-count">0</p>
+            <div class="nav-actions">
+                <select class="lang-btn">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                </select>
+                <a href="#" class="login-btn">Sign In</a>
             </div>
-            <div class="stat-card">
-                <h3>Completed</h3>
-                <p id="completed-count" style="color: var(--success);">0</p>
+        </nav>
+
+        <div class="hero-content">
+            <h1>Unlimited movies, TV shows and more</h1>
+            <h2>Watch anywhere. Cancel anytime.</h2>
+            <p class="email-form-heading">Ready to watch? Enter your email to create or restart your membership.</p>
+            
+            <div class="cta-form-container">
+                <div class="input-wrapper">
+                    <input type="email" class="cta-input" placeholder="Email address" autocomplete="email">
+                </div>
+                <button class="cta-btn">
+                    Get Started <span>&gt;</span>
+                </button>
             </div>
-        </section>
+        </div>
+    </header>
 
-        <section class="task-input-group">
-            <input type="text" id="task-input" placeholder="Type a critical task and press Enter..." autocomplete="off">
-            <button id="add-task-btn">Deploy Task</button>
-        </section>
+    <section class="feature-grid-row">
+        <div class="feature-container">
+            <div class="feature-text-block">
+                <h2>Enjoy on your TV</h2>
+                <p>Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players and more.</p>
+            </div>
+            <div class="feature-media-block">
+                <img src="https://assets.nflxext.com/ffe/siteui/acquisition/ourStory/fuji/desktop/tv.png" alt="Netflix TV Screen UI illustration">
+            </div>
+        </div>
+    </section>
 
-        <section class="task-list-container">
-            <h2>Active Deployments</h2>
-            <ul id="task-list" class="task-list">
-                </ul>
-        </section>
-    </main>
+    <section class="feature-grid-row">
+        <div class="feature-container reverse">
+            <div class="feature-text-block">
+                <h2>Download your shows to watch offline</h2>
+                <p>Save your favourites easily and always have something to watch.</p>
+            </div>
+            <div class="feature-media-block">
+                <img src="https://assets.nflxext.com/ffe/siteui/acquisition/ourStory/fuji/desktop/mobile-0819.jpg" alt="Mobile offline compilation preview">
+            </div>
+        </div>
+    </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const taskInput = document.getElementById('task-input');
-            const addTaskBtn = document.getElementById('add-task-btn');
-            const taskList = document.getElementById('task-list');
-            const totalCountEl = document.getElementById('total-count');
-            const completedCountEl = document.getElementById('completed-count');
-
-            let tasks = JSON.parse(localStorage.getItem('app_tasks')) || [];
-
-            function updateUI() {
-                taskList.innerHTML = '';
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="accordion-wrapper">
                 
-                tasks.forEach((task, index) => {
-                    const li = document.createElement('li');
-                    li.className = `task-item ${task.completed ? 'completed' : ''}`;
-                    
-                    li.innerHTML = `
-                        <span class="task-text">${task.text}</span>
-                        <div class="task-actions">
-                            <button class="btn-action btn-complete" onclick="toggleTask(${index})">
-                                ${task.completed ? 'Undo' : 'Complete'}
-                            </button>
-                            <button class="btn-action btn-delete" onclick="deleteTask(${index})">Delete</button>
-                        </div>
-                    `;
-                    taskList.appendChild(li);
-                });
+                <details class="faq-item">
+                    <summary class="faq-question">What is Netflix? <span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        Netflix is a streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries and more on thousands of internet-connected devices.
+                    </div>
+                </details>
 
-                // Calculate & Update Metrics
-                totalCountEl.textContent = tasks.length;
-                completedCountEl.textContent = tasks.filter(t => t.completed).length;
-                
-                // Write updates directly to client browser cache
-                localStorage.setItem('app_tasks', JSON.stringify(tasks));
-            }
+                <details class="faq-item">
+                    <summary class="faq-question">How much does Netflix cost? <span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        Watch Netflix on your smartphone, tablet, Smart TV, laptop, or streaming device, all for one fixed monthly fee. Plans range from ₹149 to ₹649 a month. No extra costs, no contracts.
+                    </div>
+                </details>
 
-            function addNewTask() {
-                const text = taskInput.value.trim();
-                if (text !== '') {
-                    tasks.push({ text: text, completed: false });
-                    taskInput.value = '';
-                    updateUI();
-                }
-            }
+                <details class="faq-item">
+                    <summary class="faq-question">Where can I watch? <span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        Watch anywhere, anytime. Sign in with your Netflix account to watch instantly on the web at netflix.com from your personal computer or on any internet-connected device that offers the Netflix app.
+                    </div>
+                </details>
 
-            addTaskBtn.addEventListener('click', addNewTask);
-            taskInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addNewTask();
-            });
+                <details class="faq-item">
+                    <summary class="faq-question">How do I cancel? <span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        Netflix is flexible. There are no annoying contracts and no commitments. You can easily cancel your account online in two clicks. There are no cancellation fees – start or stop your account anytime.
+                    </div>
+                </details>
 
-            window.toggleTask = (index) => {
-                tasks[index].completed = !tasks[index].completed;
-                updateUI();
-            };
+            </div>
 
-            window.deleteTask = (index) => {
-                tasks.splice(index, 1);
-                updateUI();
-            };
+            <p class="email-form-heading" style="text-align: center;">Ready to watch? Enter your email to create or restart your membership.</p>
+            <div class="cta-form-container">
+                <div class="input-wrapper">
+                    <input type="email" class="cta-input" placeholder="Email address">
+                </div>
+                <button class="cta-btn">Get Started <span>&gt;</span></button>
+            </div>
+        </div>
+    </section>
 
-            // Run initial paint on application load
-            updateUI();
-        });
-    </script>
+    <footer>
+        <p class="footer-contact">Questions? Call <a href="tel:000-800-919-1694">000-800-919-1694</a></p>
+        <div class="footer-links-grid">
+            <a href="#">FAQ</a>
+            <a href="#">Help Centre</a>
+            <a href="#">Account</a>
+            <a href="#">Media Centre</a>
+            <a href="#">Investor Relations</a>
+            <a href="#">Jobs</a>
+            <a href="#">Ways to Watch</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Privacy</a>
+            <a href="#">Cookie Preferences</a>
+            <a href="#">Corporate Information</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <select class="lang-btn" style="margin-bottom: 1.5rem;">
+            <option>English</option>
+            <option>हिन्दी</option>
+        </select>
+        <p>Netflix India</p>
+    </footer>
+
 </body>
 </html>
