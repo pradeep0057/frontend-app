@@ -1,73 +1,45 @@
 kind: pipeline
-type: docker
+type: exec
 name: build-push-deploy
 
 steps:
+  - name: build-image
+    environment:
+      AWS_ACCOUNT_ID:
+        from_secret: AWS_ACCOUNT_ID
+      AWS_REGION:
+        from_secret: AWS_REGION
+    commands:
+      - docker build -t drone-test:latest .
+      - docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
 
-- name: build-image
-  image: docker:24-cli
+  - name: push-image
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
+      AWS_ACCOUNT_ID:
+        from_secret: AWS_ACCOUNT_ID
+      AWS_REGION:
+        from_secret: AWS_REGION
+    commands:
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
 
-  environment:
-    AWS_ACCOUNT_ID:
-      from_secret: AWS_ACCOUNT_ID
-
-    AWS_REGION:
-      from_secret: AWS_REGION
-
-  volumes:
-  - name: dockersock
-    path: /var/run/docker.sock
-
-  commands:
-    - docker build -t drone-test:latest .
-    - docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
-
-- name: push-image
-  image: docker:24-cli
-
-  environment:
-    AWS_ACCOUNT_ID:
-      from_secret: AWS_ACCOUNT_ID
-
-    AWS_REGION:
-      from_secret: AWS_REGION
-
-    AWS_ACCESS_KEY_ID:
-      from_secret: AWS_ACCESS_KEY_ID
-
-    AWS_SECRET_ACCESS_KEY:
-      from_secret: AWS_SECRET_ACCESS_KEY
-
-  volumes:
-  - name: dockersock
-    path: /var/run/docker.sock
-
-  commands:
-    - echo "Login to ECR"
-    - echo "Replace this step with a working AWS CLI image or Exec Runner"
-    - docker images
-
-- name: deploy-eks
-  image: bitnami/kubectl
-
-  environment:
-    AWS_ACCESS_KEY_ID:
-      from_secret: AWS_ACCESS_KEY_ID
-
-    AWS_SECRET_ACCESS_KEY:
-      from_secret: AWS_SECRET_ACCESS_KEY
-
-    AWS_REGION:
-      from_secret: AWS_REGION
-
-    EKS_CLUSTER_NAME:
-      from_secret: EKS_CLUSTER_NAME
-
-  commands:
-    - kubectl apply -f K8s/
-    - kubectl rollout restart deployment/drone-test -n dev
-
-volumes:
-- name: dockersock
-  host:
-    path: /var/run/docker.sock
+  - name: deploy-eks
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
+      AWS_REGION:
+        from_secret: AWS_REGION
+      EKS_CLUSTER_NAME:
+        from_secret: EKS_CLUSTER_NAME
+    commands:
+      - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+      - kubectl get nodes
+      - kubectl apply -f K8s/
+      - kubectl rollout restart deployment/drone-test -n dev
+      - kubectl get pods -n dev
