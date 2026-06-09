@@ -80,7 +80,7 @@
 
         /* Main Workspace Content */
         main {
-            flex-1;
+            flex: 1; /* FIXED: Corrected from 'flex-1;' layout error */
             width: calc(100% - 260px);
             padding: 2.5rem;
             overflow-y: auto;
@@ -312,7 +312,7 @@
                 totalCountEl.textContent = tasks.length;
                 completedCountEl.textContent = tasks.filter(t => t.completed).length;
                 
-                // Keep data safe in client browser cache
+                // Write updates directly to client browser cache
                 localStorage.setItem('app_tasks', JSON.stringify(tasks));
             }
 
@@ -340,7 +340,7 @@
                 updateUI();
             };
 
-            // Run initial paint on load
+            // Run initial paint on application load
             updateUI();
         });
     </script>
