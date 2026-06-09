@@ -1,8 +1,9 @@
 kind: pipeline
 type: docker
-name: build-push
+name: build-push-deploy
 
 steps:
+
 - name: build-image
   image: docker:24-cli
 
@@ -11,44 +12,54 @@ steps:
     path: /var/run/docker.sock
 
   commands:
-    - docker build -t frontend-app:latest .
+    - docker build -t drone-test:latest .
+    - docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
 
 - name: push-image
   image: docker:24-cli
 
   environment:
-    AWS_ACCOUNT_ID:
-      from_secret: AWS_ACCOUNT_ID
-
-    AWS_REGION:
-      from_secret: AWS_REGION
-
     AWS_ACCESS_KEY_ID:
       from_secret: AWS_ACCESS_KEY_ID
 
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY
 
+    AWS_REGION:
+      from_secret: AWS_REGION
+
+    AWS_ACCOUNT_ID:
+      from_secret: AWS_ACCOUNT_ID
+
   volumes:
   - name: dockersock
     path: /var/run/docker.sock
 
   commands:
-    - apk add --no-cache curl unzip
+    - apk add --no-cache curl
+    - TOKEN=$(curl -s -X POST "https://api.ecr.aws/token") || true
+    - echo "Use ECR login method here if needed"
 
-    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+- name: deploy
+  image: bitnami/kubectl
 
-    - unzip awscliv2.zip
+  environment:
+    AWS_ACCESS_KEY_ID:
+      from_secret: AWS_ACCESS_KEY_ID
 
-    - ./aws/install
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: AWS_SECRET_ACCESS_KEY
 
-    - /usr/local/bin/aws --version
+    AWS_REGION:
+      from_secret: AWS_REGION
 
-    - /usr/local/bin/aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+    EKS_CLUSTER_NAME:
+      from_secret: EKS_CLUSTER_NAME
 
-    - docker tag frontend-app:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend-app:latest
-
-    - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend-app:latest
+  commands:
+    - echo "Configure kubectl for EKS"
+    - kubectl apply -f K8s/
+    - kubectl rollout restart deployment/drone-test -n dev
 
 volumes:
 - name: dockersock
