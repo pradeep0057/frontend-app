@@ -3,41 +3,29 @@ type: docker
 name: ecr-push-test
 
 steps:
+  - name: build-image
+    image: docker:24-cli
+    environment:
+      AWS_ACCOUNT_ID:
+        from_secret: AWS_ACCOUNT_ID
+      AWS_REGION:
+        from_secret: AWS_REGION
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker build -t drone-test:latest .
+      - docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:test
 
-* name: build-image
-  image: docker:24-cli
-
-  environment:
-  AWS_ACCOUNT_ID:
-  from_secret: AWS_ACCOUNT_ID
-
-  AWS_REGION:
-  from_secret: AWS_REGION
-
-  volumes:
-
-  * name: dockersock
-    path: /var/run/docker.sock
-
-  commands:
-
-  * docker build -t drone-test:latest .
-  * docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:test
-
-* name: verify-image
-  image: docker:24-cli
-
-  volumes:
-
-  * name: dockersock
-    path: /var/run/docker.sock
-
-  commands:
-
-  * docker images
+  - name: verify-image
+    image: docker:24-cli
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker images
 
 volumes:
-
-* name: dockersock
-  host:
-  path: /var/run/docker.sock
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
