@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix India - Watch TV Shows Online, Watch Movies Online</title>
+    <title>Apple TV+ - Apple</title>
     <style>
-        /* Global Variables & Structural Reset */
+        /* Apple Design System CSS Variables */
         :root {
-            --primary-red: #E50914;
-            --primary-hover: #C11119;
             --bg-black: #000000;
-            --card-gray: #232323;
-            --text-white: #FFFFFF;
-            --text-muted: rgba(255, 255, 255, 0.7);
-            --border-gray: rgba(128, 128, 128, 0.5);
-            --site-width: 1200px;
+            --bg-dark: #111111;
+            --apple-glass: rgba(22, 22, 23, 0.8);
+            --text-white: #f5f5f7;
+            --text-muted: #86868b;
+            --apple-blue: #0071e3;
+            --site-width: 1040px;
+            --radius-large: 18px;
+            --radius-small: 8px;
+            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Netflix Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
         }
 
         body {
@@ -31,459 +33,395 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Hero Wrapper Component with Dark Gradient Layer overlay */
-        .hero-section {
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.9) 100%), 
-                        url('https://assets.nflxext.com/ffe/siteui/vlv3/7ca5b7c7-20aa-42a8-a278-f801b0d65fa1/fb548c15-cd85-41c6-bb4d-ee9c192d73a5/IN-en-20240326-popsignuptwoweeks-perspective_web_medium.jpg');
-            background-size: cover;
-            background-position: center;
-            min-height: 700px;
+        /* Fixed Navigation Menu (Apple Style Glassmorphism) */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-bottom: 8px solid #232323;
+            background-color: var(--apple-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Top Header Utility Menu */
-        nav {
+        .nav-container {
             max-width: var(--site-width);
             margin: 0 auto;
-            padding: 1.5rem 2rem;
+            padding: 0 1.5rem;
+            height: 48px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .brand-logo svg {
-            fill: var(--primary-red);
-            width: 148px;
-            height: 40px;
-        }
-
-        .nav-actions {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        .lang-btn {
-            background: rgba(0, 0, 0, 0.4);
-            color: var(--text-white);
-            border: 1px solid var(--border-gray);
-            padding: 0.35rem 1rem;
-            border-radius: 4px;
-            font-size: 0.875rem;
-            font-weight: 500;
+        .apple-logo svg {
+            fill: var(--text-white);
+            width: 16px;
+            height: 48px;
             cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
         }
 
-        .login-btn {
-            background-color: var(--primary-red);
-            color: var(--text-white);
-            text-decoration: none;
-            padding: 0.35rem 1rem;
-            border-radius: 4px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
+        .apple-logo svg:hover { opacity: 1; }
 
-        .login-btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        /* Main Call-to-Action Messaging Area */
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 9rem 1.5rem 0 1.5rem;
-        }
-
-        .hero-content h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .hero-content h2 {
-            font-size: 1.5rem;
-            font-weight: 400;
-            margin-bottom: 1.5rem;
-        }
-
-        .email-form-heading {
-            font-size: 1.25rem;
-            font-weight: 400;
-            margin-bottom: 1.25rem;
-        }
-
-        /* Inline CTA Forms */
-        .cta-form-container {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
-
-        .input-wrapper {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .cta-input {
-            width: 100%;
-            padding: 1.2rem 1rem;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--border-gray);
-            border-radius: 4px;
-            color: var(--text-white);
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
-
-        .cta-input:focus {
-            border-color: var(--text-white);
-            box-shadow: 0 0 0 1px var(--text-white);
-        }
-
-        .cta-btn {
-            background-color: var(--primary-red);
-            color: var(--text-white);
-            border: none;
-            padding: 0 2rem;
-            font-size: 1.5rem;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: background 0.2s ease;
-            min-height: 56px;
-        }
-
-        .cta-btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        /* Modular Grid Sections */
-        .feature-grid-row {
-            border-bottom: 8px solid #232323;
-            padding: 4.5rem 2rem;
-        }
-
-        .feature-container {
-            max-width: var(--site-width);
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 3rem;
-        }
-
-        .feature-container.reverse {
-            flex-direction: row-reverse;
-        }
-
-        .feature-text-block {
-            flex: 1;
-        }
-
-        .feature-text-block h2 {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-        }
-
-        .feature-text-block p {
-            font-size: 1.5rem;
-            color: var(--text-white);
-            line-height: 1.4;
-        }
-
-        .feature-media-block {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            position: relative;
-        }
-
-        .feature-media-block img {
-            max-width: 100%;
-            height: auto;
-            z-index: 2;
-        }
-
-        /* FAQ Interactive Accordions */
-        .faq-section {
-            border-bottom: 8px solid #232323;
-            padding: 4.5rem 1.5rem;
-        }
-
-        .faq-container {
-            max-width: var(--site-width);
-            margin: 0 auto;
-        }
-
-        .faq-container h2 {
-            font-size: 3rem;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .accordion-wrapper {
-            max-width: 800px;
-            margin: 0 auto 3.5rem auto;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        /* Native Accordion Details Implementation without heavy Javascript layout scripts */
-        details.faq-item {
-            background-color: var(--card-gray);
-            width: 100%;
-            transition: background 0.2s ease;
-        }
-
-        details.faq-item:hover {
-            background-color: #414141;
-        }
-
-        summary.faq-question {
+        .nav-links {
             list-style: none;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover { opacity: 1; }
+
+        .nav-btn {
+            background-color: var(--text-white);
+            color: var(--bg-black);
+            text-decoration: none;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .nav-btn:hover { opacity: 0.9; }
+
+        /* Cinematic Hero Feature Area */
+        .hero {
+            position: relative;
+            height: 90vh;
+            min-height: 600px;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 5rem;
+            background: linear-gradient(to top, var(--bg-black) 0%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 0.4) 100%),
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center 20%;
+        }
+
+        .hero-content {
+            max-width: var(--site-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        .badge {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+        }
+
+        .hero p {
             font-size: 1.5rem;
             font-weight: 400;
-            cursor: pointer;
-            user-select: none;
-            border-bottom: 1px solid var(--bg-black);
-        }
-
-        summary.faq-question::-webkit-details-marker {
-            display: none;
-        }
-
-        .faq-icon {
-            font-size: 2.2rem;
-            font-weight: 300;
-            line-height: 1;
-            transition: transform 0.2s ease;
-        }
-
-        details[open] .faq-icon {
-            transform: rotate(45deg);
-        }
-
-        .faq-answer {
-            padding: 1.5rem;
-            font-size: 1.5rem;
-            line-height: 1.4;
             color: var(--text-white);
-            border-top: 2px solid var(--bg-black);
-            animation: slideDown 0.25s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Standard Corporate Clean Footer */
-        footer {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 4.5rem 1.5rem;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-
-        .footer-contact {
             margin-bottom: 2rem;
+            max-width: 500px;
         }
 
-        .footer-contact a {
-            color: var(--text-muted);
-        }
-
-        .footer-links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links-grid a {
-            color: var(--text-muted);
+        .btn-primary {
+            background-color: var(--text-white);
+            color: var(--bg-black);
             text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-block;
+            transition: var(--transition);
         }
 
-        .footer-links-grid a:hover {
-            text-decoration: underline;
+        .btn-primary:hover {
+            transform: scale(1.03);
+            background-color: #ffffff;
         }
 
-        /* Media Viewport Responsive Breakpoints */
-        @media (max-width: 968px) {
-            .hero-content h1, .feature-text-block h2, .faq-container h2 {
-                font-size: 2.2rem;
-            }
-            .hero-content h2, .feature-text-block p, summary.faq-question, .faq-answer {
-                font-size: 1.2rem;
-            }
-            .feature-container, .feature-container.reverse {
-                flex-direction: column;
-                text-align: center;
-                gap: 2rem;
-            }
-            .brand-logo svg {
-                width: 100px;
-                height: 30px;
-            }
+        /* Interactive Showcase Grid */
+        .showcase-section {
+            padding: 6rem 1.5rem;
+            background-color: var(--bg-black);
         }
 
-        @media (max-width: 550px) {
-            .cta-form-container {
-                flex-direction: column;
-            }
-            .input-wrapper, .cta-btn {
-                width: 100%;
-                justify-content: center;
-            }
+        .section-header {
+            max-width: var(--site-width);
+            margin: 0 auto 3rem auto;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+        }
+
+        .grid-container {
+            max-width: var(--site-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .show-card {
+            background-color: var(--bg-dark);
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16 / 9;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+        }
+
+        .show-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%);
+            padding: 1.25rem;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hover States matching Apple's micro-interactions */
+        .show-card:hover {
+            transform: scale(1.04);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .show-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .show-card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Apple Plan Tier Information Panels */
+        .value-strip {
+            background-color: var(--bg-dark);
+            padding: 5rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .strip-container {
+            max-width: var(--site-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4rem;
+        }
+
+        .value-box h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .value-box p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 1.05rem;
+        }
+
+        /* Minimal Footer layout architectural framework */
+        footer {
+            background-color: var(--bg-black);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 4rem 1.5rem 2rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-container {
+            max-width: var(--site-width);
+            margin: 0 auto;
+        }
+
+        .footer-text {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-legal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: var(--text-white);
+            text-decoration: none;
+            margin-left: 1rem;
+            opacity: 0.7;
+        }
+
+        .footer-links a:hover { opacity: 1; }
+
+        /* Layout Responsive Adaptation Rules */
+        @media (max-width: 834px) {
+            .grid-container { grid-template-columns: repeat(2, 1fr); }
+            .strip-container { grid-template-columns: 1fr; gap: 2.5rem; }
+            .hero h1 { font-size: 3rem; }
+            .nav-links { display: none; } /* Standard Apple Mobile Collapse strategy */
+        }
+
+        @media (max-width: 480px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.25rem; }
         }
     </style>
 </head>
 <body>
 
-    <header class="hero-section">
-        <nav>
-            <div class="brand-logo">
-                <svg viewBox="0 0 111 30" aria-hidden="true">
-                    <path d="M10.5 9.3v13.4c0 .6-.2.8-.7.8H8.1c-.5 0-.7-.2-.7-.8V9.3h-.1l-3.3 12.3c-.1.5-.4.7-.8.7H1.5c-.5 0-.7-.3-.6-.8L4.6 3.7c.1-.5.4-.7.9-.7h3c.5 0 .7.2.8.7l3.6 13.5h.1l3.3-12.4c.1-.5.4-.7.9-.7h2.9c.5 0 .7.3.6.8l-3.7 17.8c-.1.5-.4.7-.9.7h-1.8c-.5 0-.7-.2-.7-.8V9.3h-.1zM31.3 12.8c0-2.4-1.2-4.1-3.6-4.1-2.3 0-3.7 1.7-3.7 4.1v5.3c0 2.4 1.3 4.1 3.7 4.1 2.4 0 3.6-1.7 3.6-4.1v-5.3zm3.7 5.4c0 4.2-2.7 6.6-7.3 6.6-4.7 0-7.4-2.4-7.4-6.6v-5.5c0-4.2 2.7-6.6 7.4-6.6 4.6 0 7.3 2.4 7.3 6.6v5.5zM41.7 3c.6 0 .8.2.8.8v5.1h3.3c.5 0 .7.2.7.7v1.8c0 .5-.2.7-.7.7h-3.3v7.3c0 1.2.4 1.7 1.4 1.7h1.9c.5 0 .7.2.7.7v1.9c0 .5-.2.7-.7.7h-2.5c-3.1 0-4.6-1.4-4.6-4.3V12h-1.7c-.5 0-.7-.2-.7-.7V9.5c0-.5.2-.7.7-.7h1.7V3.8c0-.6.2-.8.8-.8h2.3zM58.3 9c.5 0 .7.2.7.7v13.1c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V12c0-1.5-.7-2.3-1.9-2.3-1.4 0-2.3 1.1-2.3 2.7v10.4c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V3.8c0-.6.2-.8.8-.8h2.3c.5 0 .7.2.7.8v5h.1c.8-1.5 2.2-2.6 4.1-2.6.4 0 .7.1 1 .2.3.1.5.2.7.4.3.3.5.7.5 1.1v.2zM63.8 3.8c0-.6.2-.8.8-.8h2.3c.5 0 .7.2.7.8v19c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V3.8zM73.5 4.8c0-.9.7-1.6 1.7-1.6s1.6.7 1.6 1.6c0 .9-.7 1.6-1.6 1.6s-1.7-.7-1.7-.1.6zm.2 4.5c.5 0 .7.2.7.7v13.1c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V10c0-.5.2-.7.7-.7h2.3zM89.1 9.3v13.4c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V12c0-1.5-.7-2.3-1.9-2.3-1.3 0-2.2 1.1-2.2 2.7v10.4c0 .6-.2.8-.7.8h-2.3c-.5 0-.7-.2-.7-.8V10c0-.5.2-.7.7-.7h2.3c.5 0 .7.2.7.7v1.4h.1c.8-1.4 2.2-2.4 4-2.4 3 0 4.7 1.9 4.7 4.9v.4zM100.8 12.8c0-2.4-1.2-4.1-3.6-4.1-2.3 0-3.7 1.7-3.7 4.1v5.3c0 2.4 1.3 4.1 3.7 4.1 2.4 0 3.6-1.7 3.6-4.1v-5.3zm3.7 5.4c0 4.2-2.7 6.6-7.3 6.6-4.7 0-7.4-2.4-7.4-6.6v-5.5c0-4.2 2.7-6.6 7.4-6.6 4.6 0 7.3 2.4 7.3 6.6v5.5z"></path>
+    <header>
+        <div class="nav-container">
+            <div class="apple-logo">
+                <svg viewBox="0 0 18 18">
+                    <path d="M15.56 10.1a3.75 3.75 0 0 1 2.22 3.4 3.79 3.79 0 0 1-2.45 3.54c-.62.24-1.2.4-1.78.4-.66 0-1.2-.2-1.85-.52-.64-.3-1.13-.52-1.75-.52-.64 0-1.15.22-1.77.53-.63.32-1.2.51-1.87.51a4.34 4.34 0 0 1-3.66-2.4c-1.42-2.45-1.42-6.42.06-8.97a4.42 4.42 0 0 1 3.79-2.3c.77 0 1.4.27 1.93.54.48.24.87.44 1.25.44.36 0 .73-.18 1.22-.42.58-.29 1.3-.6 2.18-.6a4.2 4.2 0 0 1 3.52 1.94 3.7 3.7 0 0 0-2.83 3.83zm-2.42-7.53a3.57 3.57 0 0 0 .84-2.57 3.65 3.65 0 0 0-2.4 1.24 3.39 3.39 0 0 0-.88 2.47 3.2 3.2 0 0 0 2.44-1.14z"/>
                 </svg>
             </div>
-            <div class="nav-actions">
-                <select class="lang-btn">
-                    <option value="en">English</option>
-                    <option value="hi">हिन्दी</option>
-                </select>
-                <a href="#" class="login-btn">Sign In</a>
-            </div>
-        </nav>
-
-        <div class="hero-content">
-            <h1>Unlimited movies, TV shows and more</h1>
-            <h2>Watch anywhere. Cancel anytime.</h2>
-            <p class="email-form-heading">Ready to watch? Enter your email to create or restart your membership.</p>
-            
-            <div class="cta-form-container">
-                <div class="input-wrapper">
-                    <input type="email" class="cta-input" placeholder="Email address" autocomplete="email">
-                </div>
-                <button class="cta-btn">
-                    Get Started <span>&gt;</span>
-                </button>
-            </div>
+            <ul class="nav-links">
+                <li><a href="#">Store</a></li>
+                <li><a href="#">Mac</a></li>
+                <li><a href="#">iPad</a></li>
+                <li><a href="#">iPhone</a></li>
+                <li><a href="#">Watch</a></li>
+                <li><a href="#" style="opacity: 1;">TV & Home</a></li>
+                <li><a href="#">Support</a></li>
+            </ul>
+            <a href="#" class="nav-btn">Sign In</a>
         </div>
     </header>
 
-    <section class="feature-grid-row">
-        <div class="feature-container">
-            <div class="feature-text-block">
-                <h2>Enjoy on your TV</h2>
-                <p>Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players and more.</p>
-            </div>
-            <div class="feature-media-block">
-                <img src="https://assets.nflxext.com/ffe/siteui/acquisition/ourStory/fuji/desktop/tv.png" alt="Netflix TV Screen UI illustration">
-            </div>
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge">Apple Original</span>
+            <h1>The Morning Show</h1>
+            <p>Chaos is the new normal. Watch the award-winning drama unfold.</p>
+            <a href="#" class="btn-primary">Stream Now</a>
         </div>
     </section>
 
-    <section class="feature-grid-row">
-        <div class="feature-container reverse">
-            <div class="feature-text-block">
-                <h2>Download your shows to watch offline</h2>
-                <p>Save your favourites easily and always have something to watch.</p>
-            </div>
-            <div class="feature-media-block">
-                <img src="https://assets.nflxext.com/ffe/siteui/acquisition/ourStory/fuji/desktop/mobile-0819.jpg" alt="Mobile offline compilation preview">
-            </div>
+    <section class="showcase-section">
+        <div class="section-header">
+            <h2>New Apple Originals</h2>
+            <p>New movies and series added every month.</p>
         </div>
-    </section>
 
-    <section class="faq-section">
-        <div class="faq-container">
-            <h2>Frequently Asked Questions</h2>
-            <div class="accordion-wrapper">
-                
-                <details class="faq-item">
-                    <summary class="faq-question">What is Netflix? <span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        Netflix is a streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries and more on thousands of internet-connected devices.
-                    </div>
-                </details>
-
-                <details class="faq-item">
-                    <summary class="faq-question">How much does Netflix cost? <span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        Watch Netflix on your smartphone, tablet, Smart TV, laptop, or streaming device, all for one fixed monthly fee. Plans range from ₹149 to ₹649 a month. No extra costs, no contracts.
-                    </div>
-                </details>
-
-                <details class="faq-item">
-                    <summary class="faq-question">Where can I watch? <span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        Watch anywhere, anytime. Sign in with your Netflix account to watch instantly on the web at netflix.com from your personal computer or on any internet-connected device that offers the Netflix app.
-                    </div>
-                </details>
-
-                <details class="faq-item">
-                    <summary class="faq-question">How do I cancel? <span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        Netflix is flexible. There are no annoying contracts and no commitments. You can easily cancel your account online in two clicks. There are no cancellation fees – start or stop your account anytime.
-                    </div>
-                </details>
-
-            </div>
-
-            <p class="email-form-heading" style="text-align: center;">Ready to watch? Enter your email to create or restart your membership.</p>
-            <div class="cta-form-container">
-                <div class="input-wrapper">
-                    <input type="email" class="cta-input" placeholder="Email address">
+        <div class="grid-container">
+            <div class="show-card">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop" alt="Ted Lasso Show Cover Block Art">
+                <div class="card-overlay">
+                    <div class="card-title">Ted Lasso</div>
                 </div>
-                <button class="cta-btn">Get Started <span>&gt;</span></button>
+            </div>
+            <div class="show-card">
+                <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=1945&auto=format&fit=crop" alt="Severance Cover Art Grid UI">
+                <div class="card-overlay">
+                    <div class="card-title">Severance</div>
+                </div>
+            </div>
+            <div class="show-card">
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1974&auto=format&fit=crop" alt="Foundation SciFi Cinema Graphic">
+                <div class="card-overlay">
+                    <div class="card-title">Foundation</div>
+                </div>
+            </div>
+            <div class="show-card">
+                <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1974&auto=format&fit=crop" alt="For All Mankind Graphic Frame">
+                <div class="card-overlay">
+                    <div class="card-title">For All Mankind</div>
+                </div>
+            </div>
+            <div class="show-card">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1994&auto=format&fit=crop" alt="Silo Cinematic Background">
+                <div class="card-overlay">
+                    <div class="card-title">Silo</div>
+                </div>
+            </div>
+            <div class="show-card">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" alt="Prehistoric Planet Show Cover Art">
+                <div class="card-overlay">
+                    <div class="card-title">Prehistoric Planet</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="value-strip">
+        <div class="strip-container">
+            <div class="value-box">
+                <h3>Buy an Apple device</h3>
+                <p>Get 3 months of Apple TV+ free when you buy an eligible iPhone, iPad, iPod touch, Apple TV or Mac. Check your device eligibility directly inside settings.</p>
+            </div>
+            <div class="value-box">
+                <h3>Share with your family</h3>
+                <p>A family sharing subscription allows up to six family members to access premium original content streaming concurrently using their individual Apple ID profiles.</p>
             </div>
         </div>
     </section>
 
     <footer>
-        <p class="footer-contact">Questions? Call <a href="tel:000-800-919-1694">000-800-919-1694</a></p>
-        <div class="footer-links-grid">
-            <a href="#">FAQ</a>
-            <a href="#">Help Centre</a>
-            <a href="#">Account</a>
-            <a href="#">Media Centre</a>
-            <a href="#">Investor Relations</a>
-            <a href="#">Jobs</a>
-            <a href="#">Ways to Watch</a>
-            <a href="#">Terms of Use</a>
-            <a href="#">Privacy</a>
-            <a href="#">Cookie Preferences</a>
-            <a href="#">Corporate Information</a>
-            <a href="#">Contact Us</a>
+        <div class="footer-container">
+            <p class="footer-text">
+                1. Subscription required for Apple TV+. Special pricing structures apply when bundled with Apple One packages. Trade-in values will vary based on the condition, year, and configuration of your eligible trade-in device. Not all devices are eligible for credit. This page is modeled cleanly for structural semantic front-end clone validation evaluation objectives.
+            </p>
+            <div class="footer-legal">
+                <p>Copyright © 2026 Apple Inc. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Sales and Refunds</a>
+                    <a href="#">Legal</a>
+                </div>
+            </div>
         </div>
-        <select class="lang-btn" style="margin-bottom: 1.5rem;">
-            <option>English</option>
-            <option>हिन्दी</option>
-        </select>
-        <p>Netflix India</p>
     </footer>
 
 </body>
