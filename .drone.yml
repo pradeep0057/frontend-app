@@ -1,15 +1,20 @@
 kind: pipeline
 type: docker
-name: deploy-tools-test
+name: push-deploy-tools
 
 steps:
-  - name: build-deploy-image
+  - name: tag-image
     image: docker:24-cli
+    environment:
+      AWS_ACCOUNT_ID:
+        from_secret: AWS_ACCOUNT_ID
+      AWS_REGION:
+        from_secret: AWS_REGION
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker build -f Dockerfile.deploy -t deploy-tools:latest .
+      - docker tag deploy-tools:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/deploy-tools:latest
       - docker images
 
 volumes:
