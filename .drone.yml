@@ -18,7 +18,7 @@ steps:
         from_secret: AWS_REGION
       repo: drone-test
       tags: 
-        - 99
+        - latest
         - ${DRONE_COMMIT_SHA:0:7}
 
   # Step 2: Deploy to EKS using a verified image
