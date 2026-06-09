@@ -1,20 +1,20 @@
 kind: pipeline
 type: docker
-name: build-push
+name: docker-test
 
 steps:
-- name: build-and-push
-  image: plugins/ecr
+- name: docker-info
+  image: docker:24-cli
 
-  settings:
-    repo: frontend-app
-    registry:
-      from_secret: AWS_ECR_REGISTRY
-    region:
-      from_secret: AWS_REGION
-    access_key:
-      from_secret: AWS_ACCESS_KEY_ID
-    secret_key:
-      from_secret: AWS_SECRET_ACCESS_KEY
-    tags:
-      - latest
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+
+  commands:
+    - docker version
+    - docker ps
+
+volumes:
+- name: dockersock
+  host:
+    path: /var/run/docker.sock
