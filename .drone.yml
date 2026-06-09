@@ -4,7 +4,6 @@ name: deploy
 
 steps:
 
-# Build Docker Image
 - name: build-image
   image: docker:24-cli
 
@@ -15,9 +14,8 @@ steps:
   commands:
     - docker build -t frontend-app:latest .
 
-# Push to ECR
 - name: push-ecr
-  image: docker:24-cli
+  image: amazon/aws-cli
 
   environment:
     AWS_ACCESS_KEY_ID:
@@ -37,42 +35,13 @@ steps:
     path: /var/run/docker.sock
 
   commands:
-    - apk add --no-cache python3 py3-pip
-    - pip3 install awscli --break-system-packages
+    - aws --version
 
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
     - docker tag frontend-app:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend-app:latest
 
     - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend-app:latest
-
-# Deploy to EKS
-- name: deploy-eks
-  image: bitnami/kubectl
-
-  environment:
-    AWS_ACCESS_KEY_ID:
-      from_secret: AWS_ACCESS_KEY_ID
-
-    AWS_SECRET_ACCESS_KEY:
-      from_secret: AWS_SECRET_ACCESS_KEY
-
-    AWS_REGION:
-      from_secret: AWS_REGION
-
-    EKS_CLUSTER_NAME:
-      from_secret: EKS_CLUSTER_NAME
-
-  commands:
-    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
-    - unzip awscliv2.zip
-    - ./aws/install
-
-    - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
-
-    - kubectl apply -f K8s/
-
-    - kubectl rollout restart deployment/frontend-app -n dev
 
 volumes:
 - name: dockersock
