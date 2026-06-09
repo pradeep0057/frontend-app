@@ -34,7 +34,7 @@ steps:
       - mv kubectl /usr/local/bin/kubectl
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
       - kubectl apply -f K8s/
-      - kubectl rollout restart deployment/frontend-app -n dev
+      - kubectl rollout restart deployment/frontend-app -n stage
       - kubectl get pods -n stage
 
 volumes:
