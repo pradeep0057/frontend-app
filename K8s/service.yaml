@@ -3,7 +3,7 @@ kind: Service
 
 metadata:
   name: frontend-app
-  namespace: dev
+  namespace: stage
 
 spec:
   selector:

@@ -15,7 +15,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - docker build -t drone-test:latest .
-      - docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
+      - docker tag drone-test:1 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
 
   - name: deploy
     image: amazon/aws-cli:latest
@@ -34,7 +34,7 @@ steps:
       - mv kubectl /usr/local/bin/kubectl
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
       - kubectl apply -f K8s/
-      - kubectl rollout restart deployment/drone-test -n dev
+      - kubectl rollout restart deployment/frontend-app -n dev
       - kubectl get pods -n dev
 
 volumes:

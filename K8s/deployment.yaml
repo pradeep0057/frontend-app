@@ -3,7 +3,7 @@ kind: Deployment
 
 metadata:
   name: frontend-app
-  namespace: dev
+  namespace: stage
 
 spec:
   replicas: 2
