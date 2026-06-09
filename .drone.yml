@@ -4,18 +4,8 @@ name: deploy
 
 steps:
 
-- name: build-image
+- name: build-and-push
   image: docker:24-cli
-
-  volumes:
-  - name: dockersock
-    path: /var/run/docker.sock
-
-  commands:
-    - docker build -t frontend-app:latest .
-
-- name: push-ecr
-  image: amazon/aws-cli
 
   environment:
     AWS_ACCESS_KEY_ID:
@@ -35,9 +25,13 @@ steps:
     path: /var/run/docker.sock
 
   commands:
+    - apk add --no-cache aws-cli
+
     - aws --version
 
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+    - docker build -t frontend-app:latest .
 
     - docker tag frontend-app:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend-app:latest
 
