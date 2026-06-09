@@ -1,48 +1,12 @@
 kind: pipeline
 type: docker
-name: deploy
+name: test
 
 steps:
-
-- name: build-and-push
-  image: plugins/ecr
-
-  settings:
-    repo: frontend-app
-
-    registry:
-      from_secret: AWS_ECR_REGISTRY
-
-    region:
-      from_secret: AWS_REGION
-
-    access_key:
-      from_secret: AWS_ACCESS_KEY_ID
-
-    secret_key:
-      from_secret: AWS_SECRET_ACCESS_KEY
-
-    tags:
-      - latest
-
-- name: deploy
-
-  image: bitnami/kubectl
-
-  environment:
-    AWS_ACCESS_KEY_ID:
-      from_secret: AWS_ACCESS_KEY_ID
-
-    AWS_SECRET_ACCESS_KEY:
-      from_secret: AWS_SECRET_ACCESS_KEY
-
-    AWS_REGION:
-      from_secret: AWS_REGION
-
-    EKS_CLUSTER_NAME:
-      from_secret: EKS_CLUSTER_NAME
+- name: hello
+  image: alpine:latest
 
   commands:
-    - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
-    - kubectl apply -f K8s/
-    - kubectl rollout restart deployment/frontend-app -n dev
+    - echo "Drone CI is working"
+    - pwd
+    - ls -la
