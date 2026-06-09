@@ -14,8 +14,8 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker build -t drone-test:1 .
-      - docker tag drone-test:1 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
+      - docker build -t drone-test:6 .
+      - docker tag drone-test:6 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
 
   - name: deploy
     image: amazon/aws-cli:latest

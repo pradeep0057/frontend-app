@@ -1,24 +1,348 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Drone CI Demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Frontend Dashboard</title>
     <style>
+        /* Modern Reset & CSS Variables */
+        :root {
+            --bg-primary: #0f172a;
+            --bg-surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --danger: #ef4444;
+            --success: #10b981;
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
         body {
-            font-family: Arial;
-            text-align: center;
-            margin-top: 100px;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar Navigation Layout */
+        aside {
+            width: 260px;
+            background-color: var(--bg-surface);
+            border-right: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            display: block;
+            transition: var(--transition);
+        }
+
+        .nav-links a.active, .nav-links a:hover {
+            background-color: var(--accent);
+            color: var(--text-main);
+        }
+
+        /* Main Workspace Content */
+        main {
+            flex-1;
+            width: calc(100% - 260px);
+            padding: 2.5rem;
+            overflow-y: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
         }
 
         h1 {
-            color: green;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        /* Form Controls */
+        .task-input-group {
+            background-color: var(--bg-surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid #334155;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background-color: var(--bg-primary);
+            border: 1px solid #334155;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Grid Metrics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background-color: var(--bg-surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid #334155;
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Task List Area */
+        .task-list-container {
+            background-color: var(--bg-surface);
+            border-radius: var(--radius);
+            border: 1px solid #334155;
+            padding: 1.5rem;
+        }
+
+        .task-list-container h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .task-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .task-item {
+            background-color: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .task-item.completed {
+            border-left-color: var(--success);
+            opacity: 0.6;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+        }
+
+        .btn-complete { background-color: var(--success); }
+        .btn-delete { background-color: var(--danger); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            aside { width: 100%; }
+            main { width: 100%; padding: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-<h1>Frontend deployed from Drone CI to EKS ..welcome to automate deployments</h1>
+    <aside>
+        <div class="logo">🚀 Apex<span>Core</span></div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">Dashboard</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </aside>
 
-<p>Version 1.0</p>
+    <main>
+        <header>
+            <div>
+                <h1>Workspace Overview</h1>
+                <p style="color: var(--text-muted);">Manage your production items dynamically</p>
+            </div>
+        </header>
 
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Tasks</h3>
+                <p id="total-count">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Completed</h3>
+                <p id="completed-count" style="color: var(--success);">0</p>
+            </div>
+        </section>
+
+        <section class="task-input-group">
+            <input type="text" id="task-input" placeholder="Type a critical task and press Enter..." autocomplete="off">
+            <button id="add-task-btn">Deploy Task</button>
+        </section>
+
+        <section class="task-list-container">
+            <h2>Active Deployments</h2>
+            <ul id="task-list" class="task-list">
+                </ul>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskInput = document.getElementById('task-input');
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const taskList = document.getElementById('task-list');
+            const totalCountEl = document.getElementById('total-count');
+            const completedCountEl = document.getElementById('completed-count');
+
+            let tasks = JSON.parse(localStorage.getItem('app_tasks')) || [];
+
+            function updateUI() {
+                taskList.innerHTML = '';
+                
+                tasks.forEach((task, index) => {
+                    const li = document.createElement('li');
+                    li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                    
+                    li.innerHTML = `
+                        <span class="task-text">${task.text}</span>
+                        <div class="task-actions">
+                            <button class="btn-action btn-complete" onclick="toggleTask(${index})">
+                                ${task.completed ? 'Undo' : 'Complete'}
+                            </button>
+                            <button class="btn-action btn-delete" onclick="deleteTask(${index})">Delete</button>
+                        </div>
+                    `;
+                    taskList.appendChild(li);
+                });
+
+                // Calculate & Update Metrics
+                totalCountEl.textContent = tasks.length;
+                completedCountEl.textContent = tasks.filter(t => t.completed).length;
+                
+                // Keep data safe in client browser cache
+                localStorage.setItem('app_tasks', JSON.stringify(tasks));
+            }
+
+            function addNewTask() {
+                const text = taskInput.value.trim();
+                if (text !== '') {
+                    tasks.push({ text: text, completed: false });
+                    taskInput.value = '';
+                    updateUI();
+                }
+            }
+
+            addTaskBtn.addEventListener('click', addNewTask);
+            taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addNewTask();
+            });
+
+            window.toggleTask = (index) => {
+                tasks[index].completed = !tasks[index].completed;
+                updateUI();
+            };
+
+            window.deleteTask = (index) => {
+                tasks.splice(index, 1);
+                updateUI();
+            };
+
+            // Run initial paint on load
+            updateUI();
+        });
+    </script>
 </body>
 </html>
