@@ -4,7 +4,7 @@ name: deploy-test
 
 steps:
   - name: deploy
-    image: 656853518128.dkr.ecr.us-east-1.amazonaws.com/deploy-tools:latest
+    image: amazon/aws-cli:latest
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: AWS_ACCESS_KEY_ID
@@ -15,7 +15,6 @@ steps:
       EKS_CLUSTER_NAME:
         from_secret: EKS_CLUSTER_NAME
     commands:
+      - aws --version
       - aws sts get-caller-identity
-      - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
-      - kubectl get nodes
-      - kubectl get ns
+      - aws eks describe-cluster --name $EKS_CLUSTER_NAME --region $AWS_REGION
