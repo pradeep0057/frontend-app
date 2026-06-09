@@ -1,8 +1,22 @@
 kind: pipeline
 type: docker
-name: kubectl-test
+name: build-push-deploy
 
 steps:
+  - name: build-image
+    image: docker:24-cli
+    environment:
+      AWS_ACCOUNT_ID:
+        from_secret: AWS_ACCOUNT_ID
+      AWS_REGION:
+        from_secret: AWS_REGION
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker build -t drone-test:latest .
+      - docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
+
   - name: deploy
     image: amazon/aws-cli:latest
     environment:
@@ -18,7 +32,12 @@ steps:
       - curl -LO https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/kubectl
-      - kubectl version --client
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
-      - kubectl get nodes
-      - kubectl get ns
+      - kubectl apply -f K8s/
+      - kubectl rollout restart deployment/drone-test -n dev
+      - kubectl get pods -n dev
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
