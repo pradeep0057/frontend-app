@@ -35,7 +35,7 @@ steps:
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
       - kubectl apply -f K8s/
       - kubectl rollout restart deployment/frontend-app -n dev
-      - kubectl get pods -n dev
+      - kubectl get pods -n stage
 
 volumes:
   - name: dockersock
