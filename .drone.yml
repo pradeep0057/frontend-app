@@ -1,31 +1,37 @@
 kind: pipeline
-type: docker  # Changed from exec to docker
-name: build-push-deploy
+type: docker
+name: ecr-test
 
-# Drone Docker pipelines naturally handle separate images per step
 steps:
-  - name: build-and-push
+  - name: build-image
+    image: docker:24-cli
+    environment:
+      AWS_ACCOUNT_ID:
+        from_secret: AWS_ACCOUNT_ID
+      AWS_REGION:
+        from_secret: AWS_REGION
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker build -t drone-test:latest .
+      - docker tag drone-test:latest $${AWS_ACCOUNT_ID}.dkr.ecr.$${AWS_REGION}.amazonaws.com/drone-test:test
+      - docker images
+
+  - name: push-image
     image: plugins/ecr
     settings:
+      repo: drone-test
+      region:
+        from_secret: AWS_REGION
       access_key:
         from_secret: AWS_ACCESS_KEY_ID
       secret_key:
         from_secret: AWS_SECRET_ACCESS_KEY
-      region:
-        from_secret: AWS_REGION
-      repo: drone-test
-      tags: latest
+    tags:
+      - test
 
-  - name: deploy-eks
-    image: amazon/aws-cli:latest
-    environment:
-      AWS_ACCESS_KEY_ID: { from_secret: AWS_ACCESS_KEY_ID }
-      AWS_SECRET_ACCESS_KEY: { from_secret: AWS_SECRET_ACCESS_KEY }
-      AWS_REGION: { from_secret: AWS_REGION }
-      EKS_CLUSTER_NAME: { from_secret: EKS_CLUSTER_NAME }
-    commands:
-      # You'll need to install kubectl dynamically or use a kube-specific image
-      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x kubectl && mv kubectl /usr/local/bin/
-      - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
-      - kubectl apply -f K8s/
-      - kubectl rollout restart deployment/drone-test -n dev
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
