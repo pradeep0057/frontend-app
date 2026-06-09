@@ -1,23 +1,21 @@
 kind: pipeline
 type: docker
-name: push-deploy-tools
+name: deploy-test
 
 steps:
-  - name: tag-image
-    image: docker:24-cli
+  - name: deploy
+    image: 656853518128.dkr.ecr.us-east-1.amazonaws.com/deploy-tools:latest
     environment:
-      AWS_ACCOUNT_ID:
-        from_secret: AWS_ACCOUNT_ID
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
       AWS_REGION:
         from_secret: AWS_REGION
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
+      EKS_CLUSTER_NAME:
+        from_secret: EKS_CLUSTER_NAME
     commands:
-      - docker tag deploy-tools:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/deploy-tools:latest
-      - docker images
-
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
+      - aws sts get-caller-identity
+      - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+      - kubectl get nodes
+      - kubectl get ns
