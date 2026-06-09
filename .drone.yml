@@ -3,9 +3,12 @@ type: docker
 name: build-deploy
 
 steps:
-  # Step 1: Build & Push to AWS ECR using the official plugin
+  # Step 1: Build & Push to AWS ECR using host's Docker socket
   - name: build-and-push
     image: plugins/ecr
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
     settings:
       access_key:
         from_secret: AWS_ACCESS_KEY_ID
@@ -16,9 +19,9 @@ steps:
       repo: drone-test
       tags: 
         - latest
-        - ${DRONE_COMMIT_SHA:0:7} # Good practice: tag with git commit hash too
+        - ${DRONE_COMMIT_SHA:0:7}
 
-  # Step 2: Deploy to EKS using pre-installed AWS & Kubectl tools
+  # Step 2: Deploy to EKS
   - name: deploy-to-eks
     image: line/kubectl-aws-cli:latest
     environment:
@@ -31,9 +34,13 @@ steps:
       EKS_CLUSTER_NAME:
         from_secret: EKS_CLUSTER_NAME
     commands:
-      # Authenticate kubectl with your EKS cluster
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
-      # Apply manifests and trigger rolling update
       - kubectl apply -f K8s/
       - kubectl rollout restart deployment/frontend-app -n stage
-      - kubectl rollout status deployment/frontend-app -n stage # Safer than 'get pods' (waits for success)
+      - kubectl rollout status deployment/frontend-app -n stage
+
+# Mount the host's docker socket so plugins/ecr can see it
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
