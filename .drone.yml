@@ -3,30 +3,24 @@ type: docker
 name: build-deploy
 
 steps:
-  - name: build-image
-    image: docker:24-cli
-    environment:
-      AWS_ACCOUNT_ID:
-        from_secret: AWS_ACCOUNT_ID
-      AWS_REGION:
-        from_secret: AWS_REGION
-      AWS_ACCESS_KEY_ID:
+  # Step 1: Build & Push to AWS ECR using the official plugin
+  - name: build-and-push
+    image: plugins/ecr
+    settings:
+      access_key:
         from_secret: AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY:
+      secret_key:
         from_secret: AWS_SECRET_ACCESS_KEY
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-    commands:
-      # Log into AWS ECR
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-      # Build, tag, and push the image
-      - docker build -t drone-test:latest .
-      - docker tag drone-test:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/drone-test:latest
+      region:
+        from_secret: AWS_REGION
+      repo: drone-test
+      tags: 
+        - latest
+        - ${DRONE_COMMIT_SHA:0:7} # Good practice: tag with git commit hash too
 
-  - name: deploy
-    image: amazon/aws-cli:latest
+  # Step 2: Deploy to EKS using pre-installed AWS & Kubectl tools
+  - name: deploy-to-eks
+    image: line/kubectl-aws-cli:latest
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: AWS_ACCESS_KEY_ID
@@ -37,15 +31,9 @@ steps:
       EKS_CLUSTER_NAME:
         from_secret: EKS_CLUSTER_NAME
     commands:
-      - curl -LO https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl
-      - chmod +x kubectl
-      - mv kubectl /usr/local/bin/kubectl
+      # Authenticate kubectl with your EKS cluster
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+      # Apply manifests and trigger rolling update
       - kubectl apply -f K8s/
       - kubectl rollout restart deployment/frontend-app -n stage
-      - kubectl get pods -n stage
-
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
+      - kubectl rollout status deployment/frontend-app -n stage # Safer than 'get pods' (waits for success)
