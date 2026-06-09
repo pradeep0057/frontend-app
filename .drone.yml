@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: deploy-test
+name: kubectl-test
 
 steps:
   - name: deploy
@@ -15,6 +15,10 @@ steps:
       EKS_CLUSTER_NAME:
         from_secret: EKS_CLUSTER_NAME
     commands:
-      - aws --version
-      - aws sts get-caller-identity
-      - aws eks describe-cluster --name $EKS_CLUSTER_NAME --region $AWS_REGION
+      - curl -LO https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl
+      - chmod +x kubectl
+      - mv kubectl /usr/local/bin/kubectl
+      - kubectl version --client
+      - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+      - kubectl get nodes
+      - kubectl get ns
