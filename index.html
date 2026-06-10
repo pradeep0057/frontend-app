@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude Frontend - 4K AI Robotics Interface</title>
+    <title>Apple TV+ Interface Clone</title>
     <style>
         :root {
-            --bg-color: #0a0c10;
-            --panel-bg: #11141d;
-            --accent-blue: #00f0ff;
-            --accent-purple: #bd00ff;
-            --text-main: #e2e8f0;
-            --text-muted: #64748b;
-            --border-color: #1e293b;
+            --bg-color: #000000;
+            --text-main: #ffffff;
+            --text-muted: #8e8e93;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --apple-blue: #0071e3;
         }
 
         * {
@@ -24,278 +23,265 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
             overflow-x: hidden;
+            padding-bottom: 60px;
         }
 
-        /* Core Layout Grid */
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-
-        @media (min-width: 1024px) {
-            .dashboard-container {
-                grid-template-columns: 300px 1fr;
-            }
-        }
-
-        /* Header Style */
-        header {
-            grid-column: 1 / -1;
+        /* Top Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 16px;
+            justify-content: center;
+            padding: 20px 0;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
         }
 
-        .logo-area h1 {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .status-pill {
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid var(--accent-blue);
-            color: var(--accent-blue);
+        .nav-links {
+            display: flex;
+            background: rgba(40, 40, 40, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
         }
 
-        /* Sidebar Controls */
-        .sidebar {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            height: fit-content;
-        }
-
-        .sidebar h3 {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .nav-item {
             color: var(--text-muted);
-            margin-bottom: 16px;
+            text-decoration: none;
+            padding: 8px 18px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-radius: 20px;
         }
 
-        .control-group {
-            margin-bottom: 20px;
-        }
-
-        .control-group label {
-            display: block;
-            font-size: 13px;
-            margin-bottom: 8px;
+        .nav-item:hover, .nav-item.active {
             color: var(--text-main);
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        .control-input {
-            width: 100%;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 10px;
-            border-radius: 6px;
-            outline: none;
-            transition: border 0.2s;
-        }
-
-        .control-input:focus {
-            border-color: var(--accent-blue);
-        }
-
-        .btn-primary {
-            width: 100%;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        /* Main Content Visualizer */
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-
-        @media (min-width: 768px) {
-            .main-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Video / Display Card Placeholders */
-        .display-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
+        /* Hero Spotlight Banner */
+        .hero-banner {
             position: relative;
+            width: 100%;
+            height: 70vh;
+            background: linear-gradient(to right, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.85) 100%), 
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center 20%;
+            display: flex;
+            align-items: center;
+            padding: 0 6%;
+        }
+
+        .hero-content {
+            max-width: 550px;
+            margin-top: 60px;
+        }
+
+        .hero-tag {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero-description {
+            font-size: 16px;
+            line-height: 1.4;
+            color: #d1d1d6;
+            margin-bottom: 24px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-white {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .btn-white:hover {
+            background-color: rgba(255, 255, 255, 0.85);
+            transform: scale(1.03);
+        }
+
+        .btn-dark {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-dark:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.03);
+        }
+
+        /* Shelf / Row Layout */
+        .shelf {
+            padding: 40px 6% 0 6%;
+        }
+
+        .shelf-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #f5f5f7;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        /* Apple TV Card Effect */
+        .card {
+            position: relative;
+            background: #1c1c1e;
+            border-radius: 10px;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             transition: transform 0.3s ease;
         }
 
-        .display-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0, 240, 255, 0.4);
+        /* Hover states mimicking the tvOS parallax scale up */
+        .card:hover {
+            transform: scale(1.06);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.2);
+            z-index: 10;
         }
 
-        /* Simulating a crisp 4K visual canvas aspect ratio */
-        .visual-canvas {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #020205;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            border-bottom: 1px solid var(--border-color);
+        .card:hover .card-img {
+            transform: scale(1.02);
         }
 
-        /* Abstract vector graphic representation of AI Robot nodes */
-        .wireframe-robot {
-            width: 80px;
-            height: 80px;
-            border: 2px dashed var(--accent-blue);
-            border-radius: 50%;
-            animation: spin 12s linear infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .wireframe-robot::after {
-            content: '';
-            width: 40px;
-            height: 40px;
-            border: 2px dotted var(--accent-purple);
-            border-radius: 50%;
-            animation: spin-reverse 6s linear infinite;
-        }
-
-        .resolution-badge {
+        .card-info {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(0,0,0,0.75);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-family: monospace;
-            color: #00ff66;
-            border: 1px solid rgba(0,255,102,0.3);
-        }
-
-        .card-details {
-            padding: 16px;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .card-meta {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        /* Animations */
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes spin-reverse {
-            from { transform: rotate(360deg); }
-            to { transform: rotate(0deg); }
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+            font-size: 14px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
-        
-        <!-- Header -->
-        <header>
-            <div class="logo-area">
-                <h1>CLAUDE // NEURAL BOT ENGINE</h1>
-            </div>
-            <div class="status-pill">4K STREAMING ACTIVE</div>
-        </header>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="#" class="nav-item active">Watch Now</a>
+            <a href="#" class="nav-item">Apple TV+</a>
+            <a href="#" class="nav-item">Store</a>
+            <a href="#" class="nav-item">Library</a>
+            <a href="#" class="nav-item">Search</a>
+        </div>
+    </nav>
 
-        <!-- Sidebar Inputs/Controls -->
-        <aside class="sidebar">
-            <h3>System Parameters</h3>
+    <section class="hero-banner">
+        <div class="hero-content">
+            <div class="hero-tag">Apple Original // Sci-Fi Epic</div>
+            <h1 class="hero-title">FOUNDATION</h1>
+            <p class="hero-description">Based on the award-winning novels by Isaac Asimov, Foundation chronicles a band of exiles on their monumental journey to save humanity and rebuild civilization.</p>
+            <div class="btn-row">
+                <button class="btn btn-white">Play Episode 1</button>
+                <button class="btn btn-dark">+ Add to Up Next</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="shelf">
+        <h2 class="shelf-title">Up Next</h2>
+        <div class="grid-container">
             
-            <div class="control-group">
-                <label for="model-select">AI Architecture</label>
-                <select id="model-select" class="control-input">
-                    <option value="claude-3-7">Claude Sonnet v3.7</option>
-                    <option value="neural-vision">Claude Vision v4 Alpha</option>
-                </select>
+            <div class="card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=500&q=80" alt="Show">
+                <div class="card-info">Severance</div>
             </div>
 
-            <div class="control-group">
-                <label for="prompt-input">Robot Objective Prompt</label>
-                <textarea id="prompt-input" class="control-input" rows="4" style="resize: none;">Execute precision kinematic routing inside warehouse matrix environment.</textarea>
+            <div class="card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80" alt="Show">
+                <div class="card-info">For All Mankind</div>
             </div>
 
-            <button class="btn-primary" onclick="alert('Compiling instructions to AI Agents...')">Initialize Core</button>
-        </aside>
+            <div class="card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80" alt="Show">
+                <div class="card-info">Ted Lasso</div>
+            </div>
 
-        <!-- Main Workspace Render Grid -->
-        <main class="main-content">
+            <div class="card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80" alt="Show">
+                <div class="card-info">Silo</div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="shelf">
+        <h2 class="shelf-title">Trending Movies</h2>
+        <div class="grid-container">
             
-            <!-- Robot Node 1 -->
-            <div class="display-card">
-                <div class="visual-canvas">
-                    <span class="resolution-badge">4K // UHD</span>
-                    <div class="wireframe-robot"></div>
-                </div>
-                <div class="card-details">
-                    <div class="card-title">Cybernetic Unit Alpha-1</div>
-                    <div class="card-meta">Claude Vision Overlord System • Latency: 4ms</div>
-                </div>
+            <div class="card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=500&q=80" alt="Movie">
+                <div class="card-info">Killers of the Flower Moon</div>
             </div>
 
-            <!-- Robot Node 2 -->
-            <div class="display-card">
-                <div class="visual-canvas">
-                    <span class="resolution-badge">4K // UHD</span>
-                    <div class="wireframe-robot" style="border-color: var(--accent-purple)"></div>
-                </div>
-                <div class="card-details">
-                    <div class="card-title">Bipedal Logistics Mech</div>
-                    <div class="card-meta">Real-time Pathmapping Pipeline • Latency: 7ms</div>
-                </div>
+            <div class="card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80" alt="Movie">
+                <div class="card-info">CODA</div>
             </div>
 
-        </main>
-    </div>
+            <div class="card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=500&q=80" alt="Movie">
+                <div class="card-info">Greyhound</div>
+            </div>
+
+            <div class="card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80" alt="Movie">
+                <div class="card-info">Tetris</div>
+            </div>
+
+        </div>
+    </section>
 
 </body>
 </html>

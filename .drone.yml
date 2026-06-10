@@ -19,7 +19,7 @@ steps:
       repo: drone-test
       tags: 
         - latest
-        - ${DRONE_COMMIT_SHA:0:7}
+        - ${DRONE_BUILD_NUMBER}
 
   # Step 2: Deploy to EKS using a verified image
   - name: deploy-to-eks
