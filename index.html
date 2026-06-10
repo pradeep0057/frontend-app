@@ -3,281 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apple TV+ Interface Clone</title>
+    <title>Apple TV+ Clone</title>
     <style>
         :root {
             --bg-color: #000000;
-            --text-main: #ffffff;
-            --text-muted: #8e8e93;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --apple-blue: #0071e3;
+            --text-color: #ffffff;
+            --sub-text: #86868b;
+            --accent-color: #ffffff;
+            --card-bg: #1c1c1e;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            color: var(--text-color);
             overflow-x: hidden;
-            padding-bottom: 60px;
+            padding-bottom: 50px;
         }
 
-        /* Top Navigation Bar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+        /* Navigation */
+        nav {
             display: flex;
-            justify-content: center;
-            padding: 20px 0;
-            z-index: 100;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .nav-links {
             display: flex;
-            background: rgba(40, 40, 40, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 6px 12px;
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
+            list-style: none;
+            gap: 30px;
         }
 
-        .nav-item {
-            color: var(--text-muted);
+        .nav-links a {
+            color: var(--text-color);
             text-decoration: none;
-            padding: 8px 18px;
-            font-size: 15px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            border-radius: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
         }
 
-        .nav-item:hover, .nav-item.active {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.15);
+        .nav-links a:hover, .nav-links a.active {
+            opacity: 1;
         }
 
-        /* Hero Spotlight Banner */
-        .hero-banner {
-            position: relative;
-            width: 100%;
-            height: 70vh;
-            background: linear-gradient(to right, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.85) 100%), 
-                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center 20%;
+        .nav-actions {
             display: flex;
             align-items: center;
-            padding: 0 6%;
-        }
-
-        .hero-content {
-            max-width: 550px;
-            margin-top: 60px;
-        }
-
-        .hero-tag {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .hero-title {
-            font-size: 48px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 16px;
-            letter-spacing: -1px;
-        }
-
-        .hero-description {
-            font-size: 16px;
-            line-height: 1.4;
-            color: #d1d1d6;
-            margin-bottom: 24px;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            padding: 12px 28px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-white {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        .btn-white:hover {
-            background-color: rgba(255, 255, 255, 0.85);
-            transform: scale(1.03);
-        }
-
-        .btn-dark {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-dark:hover {
-            background-color: rgba(255, 255, 255, 0.25);
-            transform: scale(1.03);
-        }
-
-        /* Shelf / Row Layout */
-        .shelf {
-            padding: 40px 6% 0 6%;
-        }
-
-        .shelf-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: #f5f5f7;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 20px;
         }
 
-        /* Apple TV Card Effect */
-        .card {
-            position: relative;
-            background: #1c1c1e;
-            border-radius: 10px;
-            aspect-ratio: 16 / 9;
-            overflow: hidden;
+        .btn-signin {
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
-        .card-img {
+        /* Hero Banner */
+        .hero {
+            position: relative;
+            height: 80vh;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 5% 80px 5%;
+            background: linear-gradient(to top, #000 10%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop') no-repeat center center/cover;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-tagline {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--sub-text);
+            margin-bottom: 10px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: #e8e8ed;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn-cta {
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-cta:hover {
+            transform: scale(1.03);
+        }
+
+        /* Shelf / Row Sections */
+        .shelf {
+            padding: 40px 5% 0 5%;
+        }
+
+        .shelf-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.04);
+        }
+
+        .movie-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
         }
 
-        /* Hover states mimicking the tvOS parallax scale up */
-        .card:hover {
-            transform: scale(1.06);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.2);
-            z-index: 10;
-        }
-
-        .card:hover .card-img {
-            transform: scale(1.02);
-        }
-
-        .card-info {
+        .movie-info {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
-            font-size: 14px;
-            font-weight: 500;
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0));
+        }
+
+        .movie-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .movie-name {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-title { font-size: 2.5rem; }
+            .hero { height: 65vh; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-links">
-            <a href="#" class="nav-item active">Watch Now</a>
-            <a href="#" class="nav-item">Apple TV+</a>
-            <a href="#" class="nav-item">Store</a>
-            <a href="#" class="nav-item">Library</a>
-            <a href="#" class="nav-item">Search</a>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+             tv+
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">Store</a></li>
+            <li><a href="#">Library</a></li>
+            <li><a href="#">Search</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="btn-signin">Sign In</button>
         </div>
     </nav>
 
-    <section class="hero-banner">
+    <!-- Hero / Featured Section -->
+    <section class="hero">
         <div class="hero-content">
-            <div class="hero-tag">Apple Original // Sci-Fi Epic</div>
-            <h1 class="hero-title">FOUNdATIONs</h1>
-            <p class="hero-description">Based on the award-winning novels by Isaac Asimov, Foundation chronicles a band of exiles on their monumental journey to save humanity and rebuild civilization.</p>
-            <div class="btn-row">
-                <button class="btn btn-white">Play Episode 1</button>
-                <button class="btn btn-dark">+ Add to Up Next</button>
-            </div>
+            <div class="hero-tagline">Apple Original Series</div>
+            <h1 class="hero-title">The Big Screen</h1>
+            <p class="hero-description">An inside look at the stories, visionaries, and boundary-pushing creators shaping the future of global cinema.</p>
+            <button class="btn-cta">Stream Now</button>
         </div>
     </section>
 
+    <!-- Content Shelf 1 -->
     <section class="shelf">
-        <h2 class="shelf-title">Up Next</h2>
-        <div class="grid-container">
+        <h2 class="shelf-title">New Releases</h2>
+        <div class="card-container">
             
-            <div class="card">
-                <img class="card-img" src="https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=500&q=80" alt="Show">
-                <div class="card-info">Severance</div>
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=600&auto=format&fit=crop" alt="Movie Poster">
+                <div class="movie-info">
+                    <span class="movie-badge">PREMIERE</span>
+                    <div class="movie-name">Chasing Horizon</div>
+                </div>
             </div>
 
-            <div class="card">
-                <img class="card-img" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80" alt="Show">
-                <div class="card-info">For All Mankind</div>
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop" alt="Movie Poster">
+                <div class="movie-info">
+                    <span class="movie-badge">SERIES</span>
+                    <div class="movie-name">Neon Genesis</div>
+                </div>
             </div>
 
-            <div class="card">
-                <img class="card-img" src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80" alt="Show">
-                <div class="card-info">Ted Lasso</div>
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1535016120720-40c646be5580?q=80&w=600&auto=format&fit=crop" alt="Movie Poster">
+                <div class="movie-info">
+                    <span class="movie-badge">MOVIE</span>
+                    <div class="movie-name">The Last Echo</div>
+                </div>
             </div>
 
-            <div class="card">
-                <img class="card-img" src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80" alt="Show">
-                <div class="card-info">Silo</div>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="shelf">
-        <h2 class="shelf-title">Trending Movies</h2>
-        <div class="grid-container">
-            
-            <div class="card">
-                <img class="card-img" src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=500&q=80" alt="Movie">
-                <div class="card-info">Killers of the Flower Moon</div>
-            </div>
-
-            <div class="card">
-                <img class="card-img" src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80" alt="Movie">
-                <div class="card-info">CODA</div>
-            </div>
-
-            <div class="card">
-                <img class="card-img" src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=500&q=80" alt="Movie">
-                <div class="card-info">Greyhound</div>
-            </div>
-
-            <div class="card">
-                <img class="card-img" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80" alt="Movie">
-                <div class="card-info">Tetris</div>
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop" alt="Movie Poster">
+                <div class="movie-info">
+                    <span class="movie-badge">SCI-FI</span>
+                    <div class="movie-name">Deep Orbit</div>
+                </div>
             </div>
 
         </div>
